@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package holandes.voador.pi4webstorebackend;
+package holandes.voador.pi4webstorebackend.Controllers;
 
 /**
  *
@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin
 @RestController
-public class ProdutosController {
+public class HomeController {
 
-    @GetMapping("/produto")
+    @GetMapping("/")
     public String homeInit() {
-        return "Lista de Produtos!!";
+        return "Bem vindo a loja do Holandes Voador! Boas Compras!";
     }
 }
