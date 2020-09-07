@@ -9,10 +9,10 @@ workflows:
     jobs:
       - maven/test # checkout, build, test, and upload test results
       - heroku/deploy-via-git:
-        filters:
-          branches:
+          filters:
+            branches:
             only:
               - master
-        requires:
+          requires:
             - maven/test
  
