@@ -5,21 +5,33 @@
  */
 package holandes.voador.pi4webstorebackend.Model;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author DiogoSouza
  */
 public class ProdutosModel {
-    private double id;
+
+    private int id;
     private String nome;
     private String marca;
     private String categoria;
     private double valor;
     private String descricao;
-    private String [] palavrasChave;
+    private String palavrasChave;
+    private int p;
+    private int m;
+    private int g;
+    private int unico;
+    private ArrayList<String> imagens;
+    private ArrayList<FaqModel> perguntas;
     private int ativo;
 
-    public ProdutosModel(double id, String nome, String marca, String categoria, double valor, String descricao, String[] palavrasChave, int ativo) {
+    public ProdutosModel() {
+    }
+
+    public ProdutosModel(int id, String nome, String marca, String categoria, double valor, String descricao, String palavrasChave, int p, int m, int g, int unico, ArrayList<String> imagens, ArrayList<FaqModel> perguntas, int ativo) {
         this.id = id;
         this.nome = nome;
         this.marca = marca;
@@ -27,16 +39,20 @@ public class ProdutosModel {
         this.valor = valor;
         this.descricao = descricao;
         this.palavrasChave = palavrasChave;
+        this.p = p;
+        this.m = m;
+        this.g = g;
+        this.unico = unico;
+        this.imagens = imagens;
+        this.perguntas = perguntas;
         this.ativo = ativo;
     }
-    
-    public ProdutosModel(){}
 
-    public double getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(double id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -80,12 +96,60 @@ public class ProdutosModel {
         this.descricao = descricao;
     }
 
-    public String[] getPalavrasChave() {
+    public String getPalavrasChave() {
         return palavrasChave;
     }
 
-    public void setPalavrasChave(String[] palavrasChave) {
+    public void setPalavrasChave(String palavrasChave) {
         this.palavrasChave = palavrasChave;
+    }
+
+    public int getP() {
+        return p;
+    }
+
+    public void setP(int p) {
+        this.p = p;
+    }
+
+    public int getM() {
+        return m;
+    }
+
+    public void setM(int m) {
+        this.m = m;
+    }
+
+    public int getG() {
+        return g;
+    }
+
+    public void setG(int g) {
+        this.g = g;
+    }
+
+    public int getUnico() {
+        return unico;
+    }
+
+    public void setUnico(int unico) {
+        this.unico = unico;
+    }
+
+    public ArrayList<String> getImagens() {
+        return imagens;
+    }
+
+    public void setImagens(ArrayList<String> imagens) {
+        this.imagens = imagens;
+    }
+
+    public ArrayList<FaqModel> getPerguntas() {
+        return perguntas;
+    }
+
+    public void setPerguntas(ArrayList<FaqModel> perguntas) {
+        this.perguntas = perguntas;
     }
 
     public int getAtivo() {
@@ -95,4 +159,5 @@ public class ProdutosModel {
     public void setAtivo(int ativo) {
         this.ativo = ativo;
     }
+
 }

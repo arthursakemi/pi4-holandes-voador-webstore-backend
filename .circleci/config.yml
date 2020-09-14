@@ -15,4 +15,3 @@ workflows:
                 - master
           requires:
             - maven/test
-  
