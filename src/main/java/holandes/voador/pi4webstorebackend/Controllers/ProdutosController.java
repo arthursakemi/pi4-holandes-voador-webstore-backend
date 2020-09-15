@@ -9,22 +9,32 @@ package holandes.voador.pi4webstorebackend.Controllers;
  *
  * @author Arthur
  */
+import holandes.voador.pi4webstorebackend.DAO.ProdutoDAO;
+import holandes.voador.pi4webstorebackend.Model.Produto;
+import java.util.ArrayList;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin
 @RestController
 public class ProdutosController {
 
-    @GetMapping("/produtos")
-    public String homeInit() {
-        return "Lista de Produtos!!";
+    @GetMapping("/produto")
+    public ArrayList<Produto> homeInit() {
+        return ProdutoDAO.getAllProducts();
     }
-    
-    @PostMapping("/produtos")
-    public String cadastroProduto() {
-        return "Teste executado com sucesso";
+
+    @PostMapping("/produto")
+    public Produto cadastroProduto(@RequestBody Produto produto) {
+        return ProdutoDAO.cadastrarProduto(produto);
+    }
+
+    @GetMapping("/produto/{id}")
+    public Produto getProdutoById(@PathVariable int id) {
+        return ProdutoDAO.getProductById(id);
     }
 }

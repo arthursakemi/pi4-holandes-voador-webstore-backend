@@ -5,21 +5,35 @@
  */
 package holandes.voador.pi4webstorebackend.Model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  *
  * @author Arthur
  */
-public class FaqModel {
+public class Pergunta {
 
     private int id;
     private int idProduto;
     private String pergunta;
     private String resposta;
 
-    public FaqModel() {
+    public Pergunta() {
     }
 
-    public FaqModel(int id, int idProduto, String pergunta, String resposta) {
+    public Pergunta(String pergunta, String resposta) {
+        this.pergunta = pergunta;
+        this.resposta = resposta;
+    }
+
+    public Pergunta(int idProduto, String pergunta, String resposta) {
+        this.idProduto = idProduto;
+        this.pergunta = pergunta;
+        this.resposta = resposta;
+    }
+
+    public Pergunta(int id, int idProduto, String pergunta, String resposta) {
         this.id = id;
         this.idProduto = idProduto;
         this.pergunta = pergunta;

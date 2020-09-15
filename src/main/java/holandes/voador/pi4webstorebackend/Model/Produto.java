@@ -11,7 +11,7 @@ import java.util.ArrayList;
  *
  * @author DiogoSouza
  */
-public class ProdutosModel {
+public class Produto {
 
     private int id;
     private String nome;
@@ -24,14 +24,30 @@ public class ProdutosModel {
     private int m;
     private int g;
     private int unico;
-    private ArrayList<String> imagens;
-    private ArrayList<FaqModel> perguntas;
-    private int ativo;
+    private ArrayList<Imagem> imagens;
+    private ArrayList<Pergunta> perguntas;
+    private boolean ativo;
 
-    public ProdutosModel() {
+    public Produto() {
     }
 
-    public ProdutosModel(int id, String nome, String marca, String categoria, double valor, String descricao, String palavrasChave, int p, int m, int g, int unico, ArrayList<String> imagens, ArrayList<FaqModel> perguntas, int ativo) {
+    public Produto(String nome, String marca, String categoria, double valor, String descricao, String palavrasChave, int p, int m, int g, int unico, ArrayList<Imagem> imagens, ArrayList<Pergunta> perguntas, boolean ativo) {
+        this.nome = nome;
+        this.marca = marca;
+        this.categoria = categoria;
+        this.valor = valor;
+        this.descricao = descricao;
+        this.palavrasChave = palavrasChave;
+        this.p = p;
+        this.m = m;
+        this.g = g;
+        this.unico = unico;
+        this.imagens = imagens;
+        this.perguntas = perguntas;
+        this.ativo = ativo;
+    }
+
+    public Produto(int id, String nome, String marca, String categoria, double valor, String descricao, String palavrasChave, int p, int m, int g, int unico, ArrayList<Imagem> imagens, ArrayList<Pergunta> perguntas, boolean ativo) {
         this.id = id;
         this.nome = nome;
         this.marca = marca;
@@ -136,27 +152,27 @@ public class ProdutosModel {
         this.unico = unico;
     }
 
-    public ArrayList<String> getImagens() {
+    public ArrayList<Imagem> getImagens() {
         return imagens;
     }
 
-    public void setImagens(ArrayList<String> imagens) {
+    public void setImagens(ArrayList<Imagem> imagens) {
         this.imagens = imagens;
     }
 
-    public ArrayList<FaqModel> getPerguntas() {
+    public ArrayList<Pergunta> getPerguntas() {
         return perguntas;
     }
 
-    public void setPerguntas(ArrayList<FaqModel> perguntas) {
+    public void setPerguntas(ArrayList<Pergunta> perguntas) {
         this.perguntas = perguntas;
     }
 
-    public int getAtivo() {
+    public boolean getAtivo() {
         return ativo;
     }
 
-    public void setAtivo(int ativo) {
+    public void setAtivo(boolean ativo) {
         this.ativo = ativo;
     }
 
