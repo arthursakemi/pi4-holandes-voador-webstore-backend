@@ -13,7 +13,9 @@ import holandes.voador.pi4webstorebackend.DAO.ProdutoDAO;
 import holandes.voador.pi4webstorebackend.Model.Produto;
 import java.util.ArrayList;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,5 +38,15 @@ public class ProdutosController {
     @GetMapping("/produto/{id}")
     public Produto getProdutoById(@PathVariable int id) {
         return ProdutoDAO.getProductById(id);
+    }
+
+    @PatchMapping("/produto/{id}")
+    public Produto updateProduto(@PathVariable int id, @RequestBody Produto produto) {
+        return ProdutoDAO.updateProduto(id, produto);
+    }
+
+    @DeleteMapping("/produto/{id}")
+    public boolean deleteProduto(@PathVariable int id) {
+        return ProdutoDAO.deleteProduct(id);
     }
 }

@@ -30,9 +30,9 @@ public class ProdutoDAO {
             conexao = GerenciadorConexao.abrirConexao();
             conexao.setAutoCommit(false);
 
-            cadastrarProduto(newProduto, conexao);
-            cadastrarPerguntas(newProduto, conexao);
-            cadastrarImagens(newProduto, conexao);
+            cadastrarDadosDoProduto(newProduto, conexao);
+            cadastrarPerguntasDoProduto(newProduto, conexao);
+            cadastrarImagensDoProduto(newProduto, conexao);
 
             conexao.setAutoCommit(true);
 
@@ -45,7 +45,7 @@ public class ProdutoDAO {
         return newProduto;
     }
 
-    private static void cadastrarProduto(Produto newProduto, Connection conexao) throws SQLException {
+    private static void cadastrarDadosDoProduto(Produto newProduto, Connection conexao) throws SQLException {
         PreparedStatement statement;
         ResultSet rs;
         statement = conexao.prepareStatement("INSERT INTO produtos "
@@ -70,7 +70,7 @@ public class ProdutoDAO {
         newProduto.setId(idProduto);
     }
 
-    private static void cadastrarImagens(Produto newProduto, Connection conexao) throws SQLException {
+    private static void cadastrarImagensDoProduto(Produto newProduto, Connection conexao) throws SQLException {
         PreparedStatement imagensStatement;
         ResultSet rs;
 
@@ -92,7 +92,7 @@ public class ProdutoDAO {
         }
     }
 
-    private static void cadastrarPerguntas(Produto newProduto, Connection conexao) throws SQLException {
+    private static void cadastrarPerguntasDoProduto(Produto newProduto, Connection conexao) throws SQLException {
         PreparedStatement faqStatement;
         ResultSet rs;
 
@@ -271,5 +271,49 @@ public class ProdutoDAO {
             }
         }
         return produtos;
+    }
+
+    public static Produto updateProduto(int idProduto, Produto produto) {
+        Connection conexao;
+        String query = "UPDATE produtos SET nome = ?, marca = ?, categoria = ?, valor = ?, descricao = ?, palavras_chave = ? WHERE id = ?;";
+
+        try {
+            conexao = GerenciadorConexao.abrirConexao();
+            PreparedStatement updateStatement = conexao.prepareStatement(query);
+            updateStatement.setString(1, produto.getNome());
+            updateStatement.setString(2, produto.getMarca());
+            updateStatement.setString(3, produto.getCategoria());
+            updateStatement.setDouble(4, produto.getValor());
+            updateStatement.setString(5, produto.getDescricao());
+            updateStatement.setString(6, produto.getPalavrasChave());
+            updateStatement.setInt(7, idProduto);
+            updateStatement.executeUpdate();
+            updateStatement.close();
+        } catch (SQLException | ClassNotFoundException ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            GerenciadorConexao.fecharConexao();
+        }
+        return getProductById(idProduto);
+    }
+
+    public static boolean deleteProduct(int idProduto) {
+        Connection conexao;
+        boolean resposta = true;
+
+        try {
+            conexao = GerenciadorConexao.abrirConexao();
+            PreparedStatement deleteStatement = conexao.prepareStatement("UPDATE produtos SET ativo = false WHERE id = ?;");
+            deleteStatement.setInt(1, idProduto);
+            deleteStatement.executeUpdate();
+            deleteStatement.close();
+        } catch (SQLException | ClassNotFoundException ex) {
+            System.out.println(ex.getMessage());
+            resposta = false;
+        } finally {
+            GerenciadorConexao.fecharConexao();
+        }
+
+        return resposta;
     }
 }

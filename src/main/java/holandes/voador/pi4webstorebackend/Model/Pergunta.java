@@ -5,9 +5,6 @@
  */
 package holandes.voador.pi4webstorebackend.Model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 /**
  *
  * @author Arthur
