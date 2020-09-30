@@ -9,6 +9,7 @@ package holandes.voador.pi4webstorebackend.utils;
  *
  * @author Arthur
  */
+import io.github.cdimascio.dotenv.Dotenv;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -24,12 +25,13 @@ public class GerenciadorConexao {
     }
 
     public static Connection abrirConexao() throws ClassNotFoundException, SQLException {
+        Dotenv dotenv = Dotenv.load();
 
         String DRIVER = "com.mysql.cj.jdbc.Driver";
 
-        String USER = Env.USER;
-        String PASSWORD = Env.PASSWORD;
-        String URL = Env.URL;
+        String USER = dotenv.get("DB_USER");
+        String PASSWORD = dotenv.get("DB_PASSWORD");
+        String URL = dotenv.get("DB_URL");
 
         if (CONEXAO == null) {
             try {
