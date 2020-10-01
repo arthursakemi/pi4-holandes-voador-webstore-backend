@@ -5,10 +5,12 @@
  */
 package holandes.voador.pi4webstorebackend.DAO;
 
+import holandes.voador.pi4webstorebackend.Model.Imagem;
 import holandes.voador.pi4webstorebackend.utils.GerenciadorConexao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  *
@@ -26,6 +28,30 @@ public class ImagemDAO {
             deleteStatement.setInt(1, id);
             deleteStatement.executeUpdate();
             deleteStatement.close();
+        } catch (SQLException | ClassNotFoundException ex) {
+            System.out.println(ex.getMessage());
+            resposta = false;
+        } finally {
+            GerenciadorConexao.fecharConexao();
+        }
+
+        return resposta;
+    }
+
+    public static boolean addImage(Imagem newImagem) {
+        Connection conexao;
+        boolean resposta = true;
+
+        try {
+            conexao = GerenciadorConexao.abrirConexao();
+            PreparedStatement addStatement = conexao.prepareStatement("INSERT INTO imagens "
+                    + "(id_produto, imagem) "
+                    + "VALUES (?, ?);",
+                    Statement.RETURN_GENERATED_KEYS);
+            addStatement.setInt(1, newImagem.getIdProduto());
+            addStatement.setString(2, newImagem.getImagem());
+            addStatement.executeUpdate();
+
         } catch (SQLException | ClassNotFoundException ex) {
             System.out.println(ex.getMessage());
             resposta = false;
