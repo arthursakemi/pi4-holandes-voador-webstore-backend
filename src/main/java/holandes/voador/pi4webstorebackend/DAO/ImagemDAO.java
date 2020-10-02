@@ -9,6 +9,7 @@ import holandes.voador.pi4webstorebackend.Model.Imagem;
 import holandes.voador.pi4webstorebackend.utils.GerenciadorConexao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -38,9 +39,9 @@ public class ImagemDAO {
         return resposta;
     }
 
-    public static boolean addImage(Imagem newImagem) {
+    public static Imagem addImage(Imagem newImagem) {
         Connection conexao;
-        boolean resposta = true;
+        ResultSet rs;
 
         try {
             conexao = GerenciadorConexao.abrirConexao();
@@ -52,13 +53,17 @@ public class ImagemDAO {
             addStatement.setString(2, newImagem.getImagem());
             addStatement.executeUpdate();
 
+            rs = addStatement.getGeneratedKeys();
+            rs.next();
+
+            newImagem.setId(rs.getInt(1));
+
         } catch (SQLException | ClassNotFoundException ex) {
             System.out.println(ex.getMessage());
-            resposta = false;
         } finally {
             GerenciadorConexao.fecharConexao();
         }
 
-        return resposta;
+        return newImagem;
     }
 }

@@ -28,7 +28,7 @@ public class ImagemController {
     }
 
     @PostMapping("/imagem")
-    public static boolean addImagem(@RequestBody Imagem imagem) {
+    public static Imagem addImagem(@RequestBody Imagem imagem) {
         return ImagemDAO.addImage(imagem);
     }
 }

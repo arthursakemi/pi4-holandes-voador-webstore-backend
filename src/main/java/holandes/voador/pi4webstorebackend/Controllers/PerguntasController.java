@@ -28,7 +28,7 @@ public class PerguntasController {
     }
 
     @PostMapping("/pergunta")
-    public static boolean addPergunta(@RequestBody Pergunta pergunta) {
+    public static Pergunta addPergunta(@RequestBody Pergunta pergunta) {
         return PerguntaDAO.addPergunta(pergunta);
     }
 }

@@ -9,6 +9,7 @@ import holandes.voador.pi4webstorebackend.Model.Pergunta;
 import holandes.voador.pi4webstorebackend.utils.GerenciadorConexao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -38,9 +39,9 @@ public class PerguntaDAO {
         return resposta;
     }
 
-    public static boolean addPergunta(Pergunta newPergunta) {
+    public static Pergunta addPergunta(Pergunta newPergunta) {
         Connection conexao;
-        boolean resposta = true;
+        ResultSet rs;
 
         try {
             conexao = GerenciadorConexao.abrirConexao();
@@ -53,13 +54,17 @@ public class PerguntaDAO {
             addStatement.setString(3, newPergunta.getResposta());
             addStatement.executeUpdate();
 
+            rs = addStatement.getGeneratedKeys();
+            rs.next();
+
+            newPergunta.setId(rs.getInt(1));
+
         } catch (SQLException | ClassNotFoundException ex) {
             System.out.println(ex.getMessage());
-            resposta = false;
         } finally {
             GerenciadorConexao.fecharConexao();
         }
 
-        return resposta;
+        return newPergunta;
     }
 }
