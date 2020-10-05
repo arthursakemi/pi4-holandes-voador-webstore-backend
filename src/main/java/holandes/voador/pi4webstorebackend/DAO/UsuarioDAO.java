@@ -29,18 +29,20 @@ public class UsuarioDAO {
 
         try {
             conexao = GerenciadorConexao.abrirConexao();
-            usuarioStatement = conexao.prepareStatement("SELECT * FROM usuarios WHERE ativo = true;");
+            usuarioStatement = conexao.prepareStatement("SELECT * FROM usuarios WHERE ativo = true;", Statement.RETURN_GENERATED_KEYS);
 
             ResultSet rsUsuario = usuarioStatement.executeQuery();
             while (rsUsuario.next()) {
 
-                int idUsuario = rsUsuario.getInt("id");
-                boolean ativo = rsUsuario.getBoolean("ativo");
+                int id = rsUsuario.getInt("id");
                 String nome = rsUsuario.getString("nome");
-                String senha = rsUsuario.getString("senha");
-                int profissao = rsUsuario.getInt("profissao");
-                String email = rsUsuario.getString("email");
                 String cpf = rsUsuario.getString("cpf");
+                String email = rsUsuario.getString("email");
+                String senha = rsUsuario.getString("senha");
+                String cargo = rsUsuario.getString("cargo");
+                boolean ativo = rsUsuario.getBoolean("ativo");
+
+                usuarios.add(new Usuario(id, nome, cpf, email, senha, cargo, ativo));
             }
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(Usuario.class.getName()).log(Level.SEVERE, null, ex);
@@ -50,27 +52,46 @@ public class UsuarioDAO {
     }
 
     public static Usuario cadastrarUsuario(Usuario usuario) {
-        boolean ok = false;
         Connection con;
+        ResultSet rs;
         try {
             con = GerenciadorConexao.abrirConexao();
-            String sql = "insert into usuarios values (default,?,?,?,?,?,?)";
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setBoolean(1, usuario.isAtivo());
-            ps.setString(2, usuario.getNome());
-            ps.setString(3, usuario.getSenha());
-            ps.setInt(4, usuario.getProfissao());
-            ps.setString(5, usuario.getEmail());
-            ps.setString(6, usuario.getCpf());
+            String sql = "INSERT INTO usuarios (nome, cpf, email, senha, cargo) "
+                    + "VALUES (?, ?, ?, ?, ?, ?);";
+            PreparedStatement statement = con.prepareStatement(sql);
+            statement.setString(1, usuario.getNome());
+            statement.setString(2, usuario.getCpf());
+            statement.setString(3, usuario.getEmail());
+            statement.setString(4, usuario.getSenha());
+            statement.setString(5, usuario.getCargo());
 
-            ps.execute();
-            ok = true;
+            statement.executeUpdate();
+            rs = statement.getGeneratedKeys();
+            rs.next();
+
+            int idUsuario = rs.getInt(1);
+            usuario.setId(idUsuario);
+
         } catch (SQLException | ClassNotFoundException ex) {
             System.out.println(ex.getMessage());
-        }finally{
+        } finally {
             GerenciadorConexao.fecharConexao();
         }
         return usuario;
-        
+    }
+
+    //TODO
+    public static Usuario getUserById(int id) {
+        return new Usuario();
+    }
+
+    //TODO
+    public static Usuario updateUser(int id, Usuario usuario) {
+        return new Usuario();
+    }
+
+    //TODO
+    public static boolean deleteUser(int id) {
+        return true;
     }
 }

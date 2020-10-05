@@ -10,22 +10,34 @@ package holandes.voador.pi4webstorebackend.Model;
  * @author DiogoSouza
  */
 public class Usuario {
+
     private int id;
     private String nome;
-    private String senha;
-    //Verificar se é melhor salvar profissao no banco por String ou por numero, ex: 1 == Admin
-    private int profissao;
-    private String email;
     private String cpf;
+    private String email;
+    private String senha;
+    private String cargo;
     private boolean ativo;
 
-    public Usuario(int id, String nome, String senha, int profissao, String email, String cpf, boolean ativo) {
+    public Usuario() {
+    }
+
+    public Usuario(String nome, String cpf, String email, String senha, String cargo) {
+        this.nome = nome;
+        this.cpf = cpf;
+        this.email = email;
+        this.senha = senha;
+        this.cargo = cargo;
+        this.ativo = true;
+    }
+
+    public Usuario(int id, String nome, String cpf, String email, String senha, String cargo, boolean ativo) {
         this.id = id;
         this.nome = nome;
-        this.senha = senha;
-        this.profissao = profissao;
-        this.email = email;
         this.cpf = cpf;
+        this.email = email;
+        this.senha = senha;
+        this.cargo = cargo;
         this.ativo = ativo;
     }
 
@@ -53,12 +65,12 @@ public class Usuario {
         this.senha = senha;
     }
 
-    public int getProfissao() {
-        return profissao;
+    public String getCargo() {
+        return cargo;
     }
 
-    public void setProfissao(int profissao) {
-        this.profissao = profissao;
+    public void setCargo(String cargo) {
+        this.cargo = cargo;
     }
 
     public String getEmail() {
@@ -84,5 +96,5 @@ public class Usuario {
     public void setAtivo(boolean ativo) {
         this.ativo = ativo;
     }
-    
+
 }

@@ -46,7 +46,7 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/usuario/{id}")
-    public boolean deleteUsuario(@PathVariable int id) {
+    public boolean deleteUser(@PathVariable int id) {
         return UsuarioDAO.deleteUser(id);
     }
 
