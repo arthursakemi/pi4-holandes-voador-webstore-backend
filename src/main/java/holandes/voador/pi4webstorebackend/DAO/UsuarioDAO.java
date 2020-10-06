@@ -83,8 +83,45 @@ public class UsuarioDAO {
         return usuario;
     }
 
-    //TODO
-    public static Usuario getUserById(int id) {
+    //Por segurança esse método não retorna a senha
+    public static Usuario getUserById(int idUsuario) {
+
+        Connection conexao = null;
+        PreparedStatement st = null;
+        Usuario usuario = new Usuario();
+        try {
+            conexao = GerenciadorConexao.abrirConexao();
+            st = conexao.prepareStatement("SELECT * FROM usuarios WHERE id = ?;");
+            st.setInt(1, idUsuario);
+
+            ResultSet rsUsuario = st.executeQuery();
+            rsUsuario.next();
+
+            int id = rsUsuario.getInt("id");
+            String nome = rsUsuario.getString("nome");
+            String cpf = rsUsuario.getString("cpf");
+            String email = rsUsuario.getString("email");
+            //String senha = rsUsuario.getString("senha"); por seguranca não sera retornada a senha
+            String cargo = rsUsuario.getString("cargo");
+            boolean ativo = rsUsuario.getBoolean("ativo");
+
+            usuario.setId(id);
+            usuario.setNome(nome);
+            usuario.setCpf(cpf);
+            usuario.setEmail(email);
+            //usuario.setSenha(senha); por segurança não será retornada a senha
+            usuario.setCargo(cargo);
+            usuario.setAtivo(ativo);
+
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(Usuario.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                st.close();
+                GerenciadorConexao.fecharConexao();
+            } catch (SQLException ex) {
+            }
+        }
         return new Usuario();
     }
 
