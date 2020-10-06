@@ -29,7 +29,7 @@ public class UsuarioDAO {
 
         try {
             conexao = GerenciadorConexao.abrirConexao();
-            usuarioStatement = conexao.prepareStatement("SELECT * FROM usuarios WHERE ativo = true;", Statement.RETURN_GENERATED_KEYS);
+            usuarioStatement = conexao.prepareStatement("SELECT * FROM usuarios WHERE ativo = true;");
 
             ResultSet rsUsuario = usuarioStatement.executeQuery();
             while (rsUsuario.next()) {
@@ -56,14 +56,15 @@ public class UsuarioDAO {
         ResultSet rs;
         try {
             con = GerenciadorConexao.abrirConexao();
-            String sql = "INSERT INTO usuarios (nome, cpf, email, senha, cargo) "
+            String sql = "INSERT INTO usuarios (nome, cpf, email, senha, cargo, ativo) "
                     + "VALUES (?, ?, ?, ?, ?, ?);";
-            PreparedStatement statement = con.prepareStatement(sql);
+            PreparedStatement statement = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, usuario.getNome());
             statement.setString(2, usuario.getCpf());
             statement.setString(3, usuario.getEmail());
             statement.setString(4, usuario.getSenha());
             statement.setString(5, usuario.getCargo());
+            statement.setBoolean(6, true);
 
             statement.executeUpdate();
             rs = statement.getGeneratedKeys();
@@ -71,9 +72,11 @@ public class UsuarioDAO {
 
             int idUsuario = rs.getInt(1);
             usuario.setId(idUsuario);
+            usuario.setAtivo(true);
 
         } catch (SQLException | ClassNotFoundException ex) {
             System.out.println(ex.getMessage());
+            usuario = null;
         } finally {
             GerenciadorConexao.fecharConexao();
         }
