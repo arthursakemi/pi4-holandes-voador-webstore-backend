@@ -5,6 +5,7 @@
  */
 package holandes.voador.pi4webstorebackend.DAO;
 
+import holandes.voador.pi4webstorebackend.Model.Credencial;
 import holandes.voador.pi4webstorebackend.Model.Usuario;
 import holandes.voador.pi4webstorebackend.utils.GerenciadorConexao;
 import java.sql.Connection;
@@ -15,6 +16,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 /**
  *
@@ -38,7 +40,7 @@ public class UsuarioDAO {
                 String nome = rsUsuario.getString("nome");
                 String cpf = rsUsuario.getString("cpf");
                 String email = rsUsuario.getString("email");
-                String senha = rsUsuario.getString("senha");
+                String senha = "*****";
                 String cargo = rsUsuario.getString("cargo");
                 boolean ativo = rsUsuario.getBoolean("ativo");
 
@@ -55,15 +57,19 @@ public class UsuarioDAO {
     public static Usuario cadastrarUsuario(Usuario usuario) {
         Connection con;
         ResultSet rs;
+
+        String salt = BCrypt.gensalt();
+        String passwordHash = BCrypt.hashpw(usuario.getSenha(), salt);
         try {
             con = GerenciadorConexao.abrirConexao();
             String sql = "INSERT INTO usuarios (nome, cpf, email, senha, cargo, ativo) "
                     + "VALUES (?, ?, ?, ?, ?, ?);";
+
             PreparedStatement statement = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, usuario.getNome());
             statement.setString(2, usuario.getCpf());
             statement.setString(3, usuario.getEmail());
-            statement.setString(4, usuario.getSenha());
+            statement.setString(4, passwordHash);
             statement.setString(5, usuario.getCargo());
             statement.setBoolean(6, true);
 
@@ -127,5 +133,44 @@ public class UsuarioDAO {
     //TODO
     public static boolean deleteUser(int id) {
         return true;
+    }
+
+    public static Usuario handleLogin(Credencial credencial) {
+        Connection conexao;
+        PreparedStatement statement = null;
+        Usuario usuario = null;
+
+        try {
+            conexao = GerenciadorConexao.abrirConexao();
+            statement = conexao.prepareStatement("SELECT * FROM usuarios WHERE email = ?;");
+            statement.setString(1, credencial.getUsuario());
+
+            ResultSet rsUsuario = statement.executeQuery();
+            if (rsUsuario.next()) {
+                int id = rsUsuario.getInt("id");
+                String nome = rsUsuario.getString("nome");
+                String cpf = rsUsuario.getString("cpf");
+                String email = rsUsuario.getString("email");
+                String senha = rsUsuario.getString("senha");
+                String cargo = rsUsuario.getString("cargo");
+                boolean ativo = rsUsuario.getBoolean("ativo");
+
+                usuario = new Usuario(id, nome, cpf, email, senha, cargo, ativo);
+            }
+            statement.close();
+
+            if (credencial.isCredentialValid(usuario.getSenha())) {
+                usuario.setSenha("****");
+            } else {
+                usuario = null;
+            }
+
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(Usuario.class.getName()).log(Level.SEVERE, null, ex);
+            usuario = null;
+        } finally {
+            GerenciadorConexao.fecharConexao();
+        }
+        return usuario;
     }
 }
