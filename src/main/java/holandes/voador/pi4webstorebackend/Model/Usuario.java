@@ -22,6 +22,18 @@ public class Usuario {
     public Usuario() {
     }
 
+    public Usuario(String senha) {
+        this.senha = senha;
+    }
+
+    public Usuario(int id, String nome, String cpf, String cargo, boolean ativo) {
+        this.id = id;
+        this.nome = nome;
+        this.cpf = cpf;
+        this.cargo = cargo;
+        this.ativo = ativo;
+    }
+
     public Usuario(String nome, String cpf, String email, String senha, String cargo) {
         this.nome = nome;
         this.cpf = cpf;

@@ -6,6 +6,7 @@
 package holandes.voador.pi4webstorebackend.Controllers;
 
 import holandes.voador.pi4webstorebackend.DAO.UsuarioDAO;
+import holandes.voador.pi4webstorebackend.Model.Credencial;
 import holandes.voador.pi4webstorebackend.Model.Usuario;
 import java.util.ArrayList;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -43,6 +44,11 @@ public class UsuarioController {
     @PatchMapping("/usuario/{id}")
     public Usuario updateUser(@PathVariable int id, @RequestBody Usuario usuario) {
         return UsuarioDAO.updateUser(id, usuario);
+    }
+
+    @PatchMapping("/usuario/{id}/senha")
+    public boolean updateUserPassword(@PathVariable int id, @RequestBody Credencial credencial) {
+        return UsuarioDAO.updateUserPassword(id, credencial.getSenha());
     }
 
     @DeleteMapping("/usuario/{id}")

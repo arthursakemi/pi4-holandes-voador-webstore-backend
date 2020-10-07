@@ -19,6 +19,10 @@ public class Credencial {
     public Credencial() {
     }
 
+    public Credencial(String senha) {
+        this.senha = senha;
+    }
+
     public Credencial(String usuario, String senha) {
         this.usuario = usuario;
         this.senha = senha;
