@@ -142,7 +142,7 @@ public class UsuarioDAO {
 
         try {
             conexao = GerenciadorConexao.abrirConexao();
-            statement = conexao.prepareStatement("SELECT * FROM usuarios WHERE email = ?;");
+            statement = conexao.prepareStatement("SELECT * FROM usuarios WHERE email = ? AND ativo = true;");
             statement.setString(1, credencial.getUsuario());
 
             ResultSet rsUsuario = statement.executeQuery();
@@ -156,15 +156,14 @@ public class UsuarioDAO {
                 boolean ativo = rsUsuario.getBoolean("ativo");
 
                 usuario = new Usuario(id, nome, cpf, email, senha, cargo, ativo);
+
+                if (credencial.isCredentialValid(usuario.getSenha())) {
+                    usuario.setSenha("****");
+                } else {
+                    usuario = null;
+                }
             }
             statement.close();
-
-            if (credencial.isCredentialValid(usuario.getSenha())) {
-                usuario.setSenha("****");
-            } else {
-                usuario = null;
-            }
-
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(Usuario.class.getName()).log(Level.SEVERE, null, ex);
             usuario = null;
