@@ -125,14 +125,55 @@ public class UsuarioDAO {
         return usuario;
     }
 
-    //TODO
     public static Usuario updateUser(int id, Usuario usuario) {
-        return new Usuario();
+        Connection conexao;
+        String query = "UPDATE produtos SET nome = ?, cpf = ?, email = ?, senha = ?, cargo = ?, ativo = ? WHERE id = ?;";
+
+        //criptografia da senha
+        String salt = BCrypt.gensalt();
+        String passwordHash = BCrypt.hashpw(usuario.getSenha(), salt);
+
+        try {
+            conexao = GerenciadorConexao.abrirConexao();
+            PreparedStatement updateStatement = conexao.prepareStatement(query);
+            updateStatement.setString(1, usuario.getNome());
+            updateStatement.setString(2, usuario.getCpf());
+            updateStatement.setString(3, usuario.getEmail());
+            updateStatement.setString(4, passwordHash);
+            updateStatement.setString(5, usuario.getCargo());
+            updateStatement.setBoolean(6, usuario.isAtivo());
+            updateStatement.setInt(7, id);
+            updateStatement.executeUpdate();
+            updateStatement.close();
+
+        } catch (SQLException | ClassNotFoundException ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            GerenciadorConexao.fecharConexao();
+        }
+        return getUserById(id);
     }
 
     //TODO
     public static boolean deleteUser(int id) {
-        return true;
+        Connection conexao;
+        boolean resposta = true;
+
+        try {
+            conexao = GerenciadorConexao.abrirConexao();
+            PreparedStatement deleteStatement = conexao.prepareStatement("UPDATE usuarios SET ativo = false WHERE id = ?;");
+            deleteStatement.setInt(1, id);
+            deleteStatement.executeUpdate();
+            deleteStatement.close();
+        } catch (SQLException | ClassNotFoundException ex) {
+            System.out.println(ex.getMessage());
+            resposta = false;
+        } finally {
+            GerenciadorConexao.fecharConexao();
+        }
+
+        return resposta;
+
     }
 
     public static Usuario handleLogin(Credencial credencial) {
