@@ -6,8 +6,10 @@
 package holandes.voador.pi4webstorebackend.DAO;
 
 import holandes.voador.pi4webstorebackend.Model.Credencial;
+import holandes.voador.pi4webstorebackend.Model.JwtToken;
 import holandes.voador.pi4webstorebackend.Model.Usuario;
 import holandes.voador.pi4webstorebackend.utils.GerenciadorConexao;
+import holandes.voador.pi4webstorebackend.utils.JwtUtilities;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -79,6 +81,7 @@ public class UsuarioDAO {
 
             int idUsuario = rs.getInt(1);
             usuario.setId(idUsuario);
+            usuario.setSenha("****");
             usuario.setAtivo(true);
 
             statement.close();
@@ -193,10 +196,11 @@ public class UsuarioDAO {
         return success;
     }
 
-    public static Usuario handleLogin(Credencial credencial) {
+    public static JwtToken handleLogin(Credencial credencial) {
         Connection conexao;
         PreparedStatement statement = null;
         Usuario usuario = null;
+        JwtToken jwt = null;
 
         try {
             conexao = GerenciadorConexao.abrirConexao();
@@ -216,9 +220,7 @@ public class UsuarioDAO {
                 usuario = new Usuario(id, nome, cpf, email, senha, cargo, ativo);
 
                 if (credencial.isCredentialValid(usuario.getSenha())) {
-                    usuario.setSenha("****");
-                } else {
-                    usuario = null;
+                    jwt = new JwtToken(JwtUtilities.generateJWT(usuario));
                 }
             }
             statement.close();
@@ -228,6 +230,6 @@ public class UsuarioDAO {
         } finally {
             GerenciadorConexao.fecharConexao();
         }
-        return usuario;
+        return jwt;
     }
 }
