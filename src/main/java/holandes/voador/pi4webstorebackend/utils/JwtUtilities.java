@@ -39,6 +39,7 @@ public class JwtUtilities {
                 .builder()
                 .setIssuedAt(now)
                 .setExpiration(expirationDate)
+                .claim("id", usuario.getId())
                 .claim("nome", usuario.getNome())
                 .claim("email", usuario.getEmail())
                 .claim("cpf", usuario.getCpf())
