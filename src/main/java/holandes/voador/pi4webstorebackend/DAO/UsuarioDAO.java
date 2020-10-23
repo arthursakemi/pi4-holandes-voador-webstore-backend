@@ -198,8 +198,8 @@ public class UsuarioDAO {
 
     public static JwtToken handleLogin(Credencial credencial) {
         Connection conexao;
-        PreparedStatement statement = null;
-        Usuario usuario = null;
+        PreparedStatement statement;
+        Usuario usuario;
         JwtToken jwt = null;
 
         try {
@@ -213,7 +213,7 @@ public class UsuarioDAO {
                 String nome = rsUsuario.getString("nome");
                 String cpf = rsUsuario.getString("cpf");
                 String email = rsUsuario.getString("email");
-                String senha = "****";
+                String senha = rsUsuario.getString("senha");
                 String cargo = rsUsuario.getString("cargo");
                 boolean ativo = rsUsuario.getBoolean("ativo");
 
@@ -226,7 +226,6 @@ public class UsuarioDAO {
             statement.close();
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(Usuario.class.getName()).log(Level.SEVERE, null, ex);
-            usuario = null;
         } finally {
             GerenciadorConexao.fecharConexao();
         }

@@ -5,6 +5,7 @@
  */
 package holandes.voador.pi4webstorebackend.Controllers;
 
+import holandes.voador.pi4webstorebackend.DAO.ClienteDAO;
 import holandes.voador.pi4webstorebackend.DAO.UsuarioDAO;
 import holandes.voador.pi4webstorebackend.Model.Credencial;
 import holandes.voador.pi4webstorebackend.Model.JwtToken;
@@ -21,9 +22,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class LoginController {
 
-    @PostMapping("/login")
-    public JwtToken handleLogin(@RequestBody Credencial credencial) {
+    @PostMapping("/login/funcionario")
+    public JwtToken handleEmployeeLogin(@RequestBody Credencial credencial) {
         return UsuarioDAO.handleLogin(credencial);
+    }
+
+    @PostMapping("/login/cliente")
+    public JwtToken handleCustomerLogin(@RequestBody Credencial credencial) {
+        return ClienteDAO.handleLogin(credencial);
     }
 
 }

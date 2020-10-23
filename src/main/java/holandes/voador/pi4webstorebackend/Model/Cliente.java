@@ -37,6 +37,10 @@ public class Cliente extends Usuario {
         this.enderecosEntrega = enderecosEntrega;
     }
 
+    public Cliente(int id, String nome, String cpf, String email, String senha, String cargo, boolean ativo) {
+        super(id, nome, cpf, email, senha, cargo, ativo);
+    }
+
     public Endereco getEnderecoFaturamento() {
         return enderecoFaturamento;
     }

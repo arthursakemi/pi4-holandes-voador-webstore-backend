@@ -6,9 +6,12 @@
 package holandes.voador.pi4webstorebackend.DAO;
 
 import holandes.voador.pi4webstorebackend.Model.Cliente;
+import holandes.voador.pi4webstorebackend.Model.Credencial;
 import holandes.voador.pi4webstorebackend.Model.Endereco;
+import holandes.voador.pi4webstorebackend.Model.JwtToken;
 import holandes.voador.pi4webstorebackend.Model.Usuario;
 import holandes.voador.pi4webstorebackend.utils.GerenciadorConexao;
+import holandes.voador.pi4webstorebackend.utils.JwtUtilities;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -208,5 +211,41 @@ public class ClienteDAO {
             statement.close();
         }
 
+    }
+
+    public static JwtToken handleLogin(Credencial credencial) {
+        Connection conexao;
+        PreparedStatement statement;
+        Cliente cliente;
+        JwtToken jwt = null;
+
+        try {
+            conexao = GerenciadorConexao.abrirConexao();
+            statement = conexao.prepareStatement("SELECT * FROM usuarios WHERE email = ? AND ativo = true;");
+            statement.setString(1, credencial.getUsuario());
+
+            ResultSet rsCliente = statement.executeQuery();
+            if (rsCliente.next()) {
+                int id = rsCliente.getInt("id");
+                String nome = rsCliente.getString("nome");
+                String cpf = rsCliente.getString("cpf");
+                String email = rsCliente.getString("email");
+                String senha = rsCliente.getString("senha");
+                String cargo = rsCliente.getString("cargo");
+                boolean ativo = rsCliente.getBoolean("ativo");
+
+                cliente = new Cliente(id, nome, cpf, email, senha, cargo, ativo);
+
+                if (credencial.isCredentialValid(cliente.getSenha())) {
+                    jwt = new JwtToken(JwtUtilities.generateJWT(cliente));
+                }
+            }
+            statement.close();
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(Usuario.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            GerenciadorConexao.fecharConexao();
+        }
+        return jwt;
     }
 }
