@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProdutosController {
 
     @GetMapping("/produto")
-    public ArrayList<Produto> homeInit() {
+    public ArrayList<Produto> getProdutos() {
         return ProdutoDAO.getAllProducts();
     }
 

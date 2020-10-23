@@ -97,7 +97,7 @@ public class UsuarioDAO {
 
     public static Usuario getUserById(int idUsuario) {
         Connection conexao;
-        PreparedStatement statement = null;
+        PreparedStatement statement;
         Usuario usuario = null;
 
         try {
@@ -213,7 +213,7 @@ public class UsuarioDAO {
                 String nome = rsUsuario.getString("nome");
                 String cpf = rsUsuario.getString("cpf");
                 String email = rsUsuario.getString("email");
-                String senha = rsUsuario.getString("senha");
+                String senha = "****";
                 String cargo = rsUsuario.getString("cargo");
                 boolean ativo = rsUsuario.getBoolean("ativo");
 

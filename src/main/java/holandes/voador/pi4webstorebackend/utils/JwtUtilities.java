@@ -5,6 +5,7 @@
  */
 package holandes.voador.pi4webstorebackend.utils;
 
+import holandes.voador.pi4webstorebackend.Model.Cliente;
 import holandes.voador.pi4webstorebackend.Model.Usuario;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;

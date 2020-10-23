@@ -48,10 +48,12 @@ public class ProdutoDAO {
     private static void cadastrarDadosDoProduto(Produto newProduto, Connection conexao) throws SQLException {
         PreparedStatement statement;
         ResultSet rs;
+
         statement = conexao.prepareStatement("INSERT INTO produtos "
                 + "(nome, marca, categoria, valor, p, m, g, unico, descricao, palavras_chave, ativo) "
                 + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
                 Statement.RETURN_GENERATED_KEYS);
+
         statement.setString(1, newProduto.getNome());
         statement.setString(2, newProduto.getMarca());
         statement.setString(3, newProduto.getCategoria());
