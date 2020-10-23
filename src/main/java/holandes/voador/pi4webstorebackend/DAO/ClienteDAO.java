@@ -221,7 +221,7 @@ public class ClienteDAO {
 
         try {
             conexao = GerenciadorConexao.abrirConexao();
-            statement = conexao.prepareStatement("SELECT * FROM usuarios WHERE email = ? AND ativo = true;");
+            statement = conexao.prepareStatement("SELECT * FROM clientes WHERE email = ? AND ativo = true;");
             statement.setString(1, credencial.getUsuario());
 
             ResultSet rsCliente = statement.executeQuery();
