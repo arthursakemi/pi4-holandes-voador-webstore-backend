@@ -16,35 +16,41 @@ public class Endereco {
     private String endereco;
     private int numero;
     private String complemento;
+    private String cidade;
+    private String uf;
+    private String bairro;
 
     public Endereco() {
     }
 
-    public Endereco(String cep, String endereco) {
+    public Endereco(String cep, String endereco, int numero, String cidade, String uf, String bairro) {
         this.cep = cep;
         this.endereco = endereco;
+        this.numero = numero;
+        this.cidade = cidade;
+        this.uf = uf;
+        this.bairro = bairro;
     }
 
-    public Endereco(String cep, String endereco, int numero, String complemento) {
+    public Endereco(String cep, String endereco, int numero, String complemento, String cidade, String uf, String bairro) {
         this.cep = cep;
         this.endereco = endereco;
         this.numero = numero;
         this.complemento = complemento;
+        this.cidade = cidade;
+        this.uf = uf;
+        this.bairro = bairro;
     }
 
-    public Endereco(int id, String cep, String endereco, int numero, String complemento) {
+    public Endereco(int id, String cep, String endereco, int numero, String complemento, String cidade, String uf, String bairro) {
         this.id = id;
         this.cep = cep;
         this.endereco = endereco;
         this.numero = numero;
         this.complemento = complemento;
-    }
-
-    public Endereco(int id, String cep, String endereco, int numero) {
-        this.id = id;
-        this.cep = cep;
-        this.endereco = endereco;
-        this.numero = numero;
+        this.cidade = cidade;
+        this.uf = uf;
+        this.bairro = bairro;
     }
 
     public int getId() {

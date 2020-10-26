@@ -59,7 +59,10 @@ public class ClienteDAO {
             String endereco = rsEndereco.getString("endereco");
             int numero = rsEndereco.getInt("numero");
             String complemento = rsEndereco.getString("complemento");
-            Endereco enderecoFaturamento = new Endereco(idEndereco, cep, endereco, numero, complemento);
+            String cidade = rsEndereco.getString("cidade");
+            String uf = rsEndereco.getString("uf");
+            String bairro = rsEndereco.getString("bairro");
+            Endereco enderecoFaturamento = new Endereco(cep, endereco, numero, complemento, cidade, uf, bairro);
 
             stmtEnderecosEntrega = conexao.prepareStatement(
                     "SELECT id_endereco, cep, endereco, numero, complemento FROM enderecos_entrega "
@@ -76,8 +79,11 @@ public class ClienteDAO {
                 String enderecoEntrega = rsEnderecosEntrega.getString("endereco");
                 int numeroEntrega = rsEnderecosEntrega.getInt("numero");
                 String complementoEntrega = rsEnderecosEntrega.getString("complemento");
+                String cidadeEntrega = rsEndereco.getString("cidade");
+                String ufEntrega = rsEndereco.getString("uf");
+                String bairroEntrega = rsEndereco.getString("bairro");
 
-                enderecosEntrega.add(new Endereco(idEnderecoEntrega, cepEntrega, enderecoEntrega, numeroEntrega, complementoEntrega));
+                enderecosEntrega.add(new Endereco(idEnderecoEntrega, cepEntrega, enderecoEntrega, numeroEntrega, complementoEntrega, cidadeEntrega, ufEntrega, bairroEntrega));
             }
 
             cliente = new Cliente(enderecoFaturamento, enderecosEntrega, idCliente, nome, cpf, email, senha, cargo, ativo);
