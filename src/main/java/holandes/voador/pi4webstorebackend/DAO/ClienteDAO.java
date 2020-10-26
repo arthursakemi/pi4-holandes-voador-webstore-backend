@@ -129,14 +129,17 @@ public class ClienteDAO {
 
         statement = conexao.prepareStatement(
                 "INSERT INTO enderecos "
-                + "(cep, endereco, numero, complemento) "
-                + "VALUES(?, ?, ?, ?);",
+                + "(cep, endereco, numero, complemento, cidade, uf, bairro) "
+                + "VALUES(?, ?, ?, ?, ?, ?, ?);",
                 Statement.RETURN_GENERATED_KEYS);
 
         statement.setString(1, enderecoFaturamento.getCep());
         statement.setString(2, enderecoFaturamento.getEndereco());
         statement.setInt(3, enderecoFaturamento.getNumero());
         statement.setString(4, enderecoFaturamento.getComplemento());
+        statement.setString(5, enderecoFaturamento.getCidade());
+        statement.setString(6, enderecoFaturamento.getUf());
+        statement.setString(7, enderecoFaturamento.getBairro());
         statement.executeUpdate();
 
         rs = statement.getGeneratedKeys();
@@ -189,14 +192,17 @@ public class ClienteDAO {
         for (Endereco endereco : newCliente.getEnderecosEntrega()) {
             statement = conexao.prepareStatement(
                     "INSERT INTO enderecos "
-                    + "(cep, endereco, numero, complemento) "
-                    + "VALUES(?, ?, ?, ?);",
+                    + "(cep, endereco, numero, complemento, cidade, uf, bairro) "
+                    + "VALUES(?, ?, ?, ?, ?, ?, ?);",
                     Statement.RETURN_GENERATED_KEYS);
 
             statement.setString(1, endereco.getCep());
             statement.setString(2, endereco.getEndereco());
             statement.setInt(3, endereco.getNumero());
             statement.setString(4, endereco.getComplemento());
+            statement.setString(5, endereco.getCidade());
+            statement.setString(6, endereco.getUf());
+            statement.setString(7, endereco.getBairro());
             statement.executeUpdate();
             rs = statement.getGeneratedKeys();
             rs.next();
