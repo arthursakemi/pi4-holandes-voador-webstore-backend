@@ -260,4 +260,30 @@ public class ClienteDAO {
         }
         return jwt;
     }
+
+    public static boolean updateClientPassword(int id, String senha) {
+        Connection conexao;
+        boolean success = true;
+        String query = "UPDATE clientes SET senha = ? WHERE id = ?;";
+
+        String salt = BCrypt.gensalt();
+        String passwordHash = BCrypt.hashpw(senha, salt);
+
+        try {
+            conexao = GerenciadorConexao.abrirConexao();
+            PreparedStatement updateStatement = conexao.prepareStatement(query);
+            updateStatement.setString(1, passwordHash);
+            updateStatement.setInt(2, id);
+
+            updateStatement.executeUpdate();
+            updateStatement.close();
+
+        } catch (SQLException | ClassNotFoundException ex) {
+            System.out.println(ex.getMessage());
+            success = false;
+        } finally {
+            GerenciadorConexao.fecharConexao();
+        }
+        return success;
+    }
 }
