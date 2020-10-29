@@ -55,6 +55,7 @@ public class ClienteDAO {
             ResultSet rsEndereco = stmtEndereco.executeQuery();
 
             rsEndereco.next();
+            int id = rsEndereco.getInt("id");
             String cep = rsEndereco.getString("cep");
             String endereco = rsEndereco.getString("endereco");
             int numero = rsEndereco.getInt("numero");
@@ -62,7 +63,7 @@ public class ClienteDAO {
             String cidade = rsEndereco.getString("cidade");
             String uf = rsEndereco.getString("uf");
             String bairro = rsEndereco.getString("bairro");
-            Endereco enderecoFaturamento = new Endereco(cep, endereco, numero, complemento, cidade, uf, bairro);
+            Endereco enderecoFaturamento = new Endereco(id, cep, endereco, numero, complemento, cidade, uf, bairro);
 
             stmtEnderecosEntrega = conexao.prepareStatement(
                     "SELECT id_endereco, cep, endereco, numero, complemento FROM enderecos_entrega "
