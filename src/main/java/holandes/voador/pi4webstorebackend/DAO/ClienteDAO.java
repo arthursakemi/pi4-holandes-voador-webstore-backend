@@ -234,7 +234,7 @@ public class ClienteDAO {
             conexao = GerenciadorConexao.abrirConexao();
             PreparedStatement updateStatement = conexao.prepareStatement(query);
             updateStatement.setString(1, cliente.getNome());
-            updateStatement.setInt(5, id);
+            updateStatement.setInt(2, id);
             updateStatement.executeUpdate();
             updateStatement.close();
 
