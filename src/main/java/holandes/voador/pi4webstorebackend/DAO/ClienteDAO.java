@@ -228,7 +228,7 @@ public class ClienteDAO {
 
     public static Cliente updateCliente(int id, Cliente cliente) {
         Connection conexao;
-        String query = "UPDATE usuarios SET nome = ? WHERE id = ?;";
+        String query = "UPDATE clientes SET nome = ? WHERE id = ?;";
 
         try {
             conexao = GerenciadorConexao.abrirConexao();
