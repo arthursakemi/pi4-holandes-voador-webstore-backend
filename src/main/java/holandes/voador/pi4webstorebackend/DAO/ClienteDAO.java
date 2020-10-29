@@ -226,6 +226,26 @@ public class ClienteDAO {
 
     }
 
+    public static Cliente updateCliente(int id, Cliente cliente) {
+        Connection conexao;
+        String query = "UPDATE usuarios SET nome = ? WHERE id = ?;";
+
+        try {
+            conexao = GerenciadorConexao.abrirConexao();
+            PreparedStatement updateStatement = conexao.prepareStatement(query);
+            updateStatement.setString(1, cliente.getNome());
+            updateStatement.setInt(5, id);
+            updateStatement.executeUpdate();
+            updateStatement.close();
+
+        } catch (SQLException | ClassNotFoundException ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            GerenciadorConexao.fecharConexao();
+        }
+        return getClienteById(id);
+    }
+
     public static JwtToken handleLogin(Credencial credencial) {
         Connection conexao;
         PreparedStatement statement;

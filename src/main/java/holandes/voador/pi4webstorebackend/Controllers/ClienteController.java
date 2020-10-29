@@ -39,4 +39,9 @@ public class ClienteController {
         return ClienteDAO.updateClientPassword(id, credencial.getSenha());
     }
 
+    @PatchMapping("/cliente/{id}")
+    public Cliente updateCliente(@PathVariable int id, @RequestBody Cliente cliente) {
+        return ClienteDAO.updateCliente(id, cliente);
+    }
+
 }
