@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,6 +20,52 @@ import java.util.logging.Logger;
  * @author Arthur
  */
 public class EnderecoDAO {
+
+    public static Endereco addEnderecoEntrega(int idCliente, Endereco endereco) {
+        Connection conexao;
+        ResultSet rs;
+
+        try {
+            conexao = GerenciadorConexao.abrirConexao();
+            PreparedStatement statement = conexao.prepareStatement(
+                    "INSERT INTO enderecos "
+                    + "(cep, endereco, numero, complemento, cidade, uf, bairro) "
+                    + "VALUES(?, ?, ?, ?, ?, ?, ?);",
+                    Statement.RETURN_GENERATED_KEYS);
+
+            statement.setString(1, endereco.getCep());
+            statement.setString(2, endereco.getEndereco());
+            statement.setInt(3, endereco.getNumero());
+            statement.setString(4, endereco.getComplemento());
+            statement.setString(5, endereco.getCidade());
+            statement.setString(6, endereco.getUf());
+            statement.setString(7, endereco.getBairro());
+            statement.executeUpdate();
+            rs = statement.getGeneratedKeys();
+            rs.next();
+
+            int idEndereco = rs.getInt(1);
+            endereco.setId(idEndereco);
+
+            statement = conexao.prepareStatement(
+                    "INSERT INTO enderecos_entrega "
+                    + "(id_cliente, id_endereco) "
+                    + "VALUES(?, ?);");
+
+            statement.setInt(1, idCliente);
+            statement.setInt(2, idEndereco);
+            statement.executeUpdate();
+
+            statement.close();
+
+        } catch (SQLException | ClassNotFoundException ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            GerenciadorConexao.fecharConexao();
+        }
+
+        return endereco;
+    }
 
     public static Endereco getEnderecoById(int idEndereco) {
         Connection conexao;
@@ -53,8 +100,59 @@ public class EnderecoDAO {
         return endereco;
     }
 
-    public static Endereco updateEndereco() {
-        return new Endereco();
+    public static Endereco updateEndereco(int idEndereco, Endereco endereco) {
+        Connection conexao;
+        String query = "UPDATE enderecos "
+                + "SET cep = ?, endereco = ?, numero = ?, complemento = ?, cidade = ?, uf = ?, bairro = ? "
+                + "WHERE id = ?;";
+
+        try {
+            conexao = GerenciadorConexao.abrirConexao();
+            PreparedStatement statement = conexao.prepareStatement(query);
+            statement.setString(1, endereco.getCep());
+            statement.setString(2, endereco.getEndereco());
+            statement.setInt(3, endereco.getNumero());
+            statement.setString(4, endereco.getComplemento());
+            statement.setString(5, endereco.getCidade());
+            statement.setString(6, endereco.getUf());
+            statement.setString(7, endereco.getBairro());
+            statement.setInt(8, idEndereco);
+
+            statement.executeUpdate();
+            statement.close();
+
+        } catch (SQLException | ClassNotFoundException ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            GerenciadorConexao.fecharConexao();
+        }
+        return getEnderecoById(idEndereco);
+    }
+
+    public static boolean deleteEndereco(int id) {
+        Connection conexao;
+        boolean resposta = true;
+
+        try {
+            conexao = GerenciadorConexao.abrirConexao();
+
+            PreparedStatement deleteStatement = conexao.prepareStatement("DELETE FROM enderecos_entrega WHERE id_endereco = ?;");
+            deleteStatement.setInt(1, id);
+            deleteStatement.executeUpdate();
+
+            deleteStatement = conexao.prepareStatement("DELETE FROM enderecos WHERE id = ?;");
+            deleteStatement.setInt(1, id);
+            deleteStatement.executeUpdate();
+
+            deleteStatement.close();
+        } catch (SQLException | ClassNotFoundException ex) {
+            System.out.println(ex.getMessage());
+            resposta = false;
+        } finally {
+            GerenciadorConexao.fecharConexao();
+        }
+
+        return resposta;
     }
 
 }
