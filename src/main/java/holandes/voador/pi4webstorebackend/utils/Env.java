@@ -11,8 +11,8 @@ package holandes.voador.pi4webstorebackend.utils;
  */
 public class Env {
 
-    public static String USER = "holandes";
-    public static String PASSWORD = "holandes2020";
-    public static String URL = "jdbc:mysql://holandes.cbiz9gj9giv5.us-east-2.rds.amazonaws.com:3306/holandes_voador?useSSL=false";
+    public static String USER = "admin";
+    public static String PASSWORD = "arthurdiogomarcelo";
+    public static String URL = "jdbc:mysql://pi-brabo-holandes-voador.c7etqmlh3mnt.us-east-1.rds.amazonaws.com:3306/holandes_voador?useSSL=false";
     public static String JWT_KEY = "p0oDTJYFvAiufi1kg7IeK4PGQD6hsphF";
 }
