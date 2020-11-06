@@ -69,27 +69,11 @@ public class EnderecoDAO {
 
     public static Endereco getEnderecoById(int idEndereco) {
         Connection conexao;
-        PreparedStatement statement;
         Endereco endereco = null;
 
         try {
             conexao = GerenciadorConexao.abrirConexao();
-            statement = conexao.prepareStatement("SELECT * FROM enderecos WHERE id = ?;");
-            statement.setInt(1, idEndereco);
-
-            ResultSet rsEndereco = statement.executeQuery();
-            if (rsEndereco.next()) {
-                int id = rsEndereco.getInt("id");
-                String cep = rsEndereco.getString("cep");
-                String rua = rsEndereco.getString("endereco");
-                int numero = rsEndereco.getInt("numero");
-                String complemento = rsEndereco.getString("complemento");
-                String cidade = rsEndereco.getString("cidade");
-                String uf = rsEndereco.getString("uf");
-                String bairro = rsEndereco.getString("bairro");
-                endereco = new Endereco(id, cep, rua, numero, complemento, cidade, uf, bairro);
-            }
-            statement.close();
+            endereco = getEnderecoFromDB(conexao, idEndereco);
 
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(Endereco.class.getName()).log(Level.SEVERE, null, ex);
@@ -97,6 +81,29 @@ public class EnderecoDAO {
         } finally {
             GerenciadorConexao.fecharConexao();
         }
+        return endereco;
+    }
+
+    public static Endereco getEnderecoFromDB(Connection conexao, int idEndereco) throws SQLException {
+        PreparedStatement statement;
+        Endereco endereco = new Endereco();
+
+        statement = conexao.prepareStatement("SELECT * FROM enderecos WHERE id = ?;");
+        statement.setInt(1, idEndereco);
+        ResultSet rsEndereco = statement.executeQuery();
+
+        if (rsEndereco.next()) {
+            int id = rsEndereco.getInt("id");
+            String cep = rsEndereco.getString("cep");
+            String rua = rsEndereco.getString("endereco");
+            int numero = rsEndereco.getInt("numero");
+            String complemento = rsEndereco.getString("complemento");
+            String cidade = rsEndereco.getString("cidade");
+            String uf = rsEndereco.getString("uf");
+            String bairro = rsEndereco.getString("bairro");
+            endereco = new Endereco(id, cep, rua, numero, complemento, cidade, uf, bairro);
+        }
+        statement.close();
         return endereco;
     }
 
