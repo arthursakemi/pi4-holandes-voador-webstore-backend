@@ -30,7 +30,7 @@ public class ClienteDAO {
 
     public static Cliente getClienteById(int idCliente) {
         Connection conexao;
-        PreparedStatement stmtCliente, stmtEndereco, stmtEnderecosEntrega;
+        PreparedStatement stmtCliente, stmtEnderecosEntrega;
         Cliente cliente = null;
 
         try {
@@ -49,24 +49,10 @@ public class ClienteDAO {
             int idEndereco = rsCliente.getInt("id_endereco");
             boolean ativo = rsCliente.getBoolean("ativo");
 
-            stmtEndereco = conexao.prepareStatement("SELECT * FROM enderecos WHERE id = ?");
-            stmtEndereco.setInt(1, idEndereco);
-
-            ResultSet rsEndereco = stmtEndereco.executeQuery();
-
-            rsEndereco.next();
-            int id = rsEndereco.getInt("id");
-            String cep = rsEndereco.getString("cep");
-            String endereco = rsEndereco.getString("endereco");
-            int numero = rsEndereco.getInt("numero");
-            String complemento = rsEndereco.getString("complemento");
-            String cidade = rsEndereco.getString("cidade");
-            String uf = rsEndereco.getString("uf");
-            String bairro = rsEndereco.getString("bairro");
-            Endereco enderecoFaturamento = new Endereco(id, cep, endereco, numero, complemento, cidade, uf, bairro);
+            Endereco enderecoFaturamento = EnderecoDAO.getEnderecoFromDB(conexao, idEndereco);
 
             stmtEnderecosEntrega = conexao.prepareStatement(
-                    "SELECT id_endereco, cep, endereco, numero, complemento FROM enderecos_entrega "
+                    "SELECT id_endereco, cep, endereco, numero, complemento, cidade, uf, bairro FROM enderecos_entrega "
                     + "INNER JOIN enderecos ON id_endereco = enderecos.id "
                     + "WHERE id_cliente = ?;");
             stmtEnderecosEntrega.setInt(1, idCliente);
@@ -80,16 +66,15 @@ public class ClienteDAO {
                 String enderecoEntrega = rsEnderecosEntrega.getString("endereco");
                 int numeroEntrega = rsEnderecosEntrega.getInt("numero");
                 String complementoEntrega = rsEnderecosEntrega.getString("complemento");
-                String cidadeEntrega = rsEndereco.getString("cidade");
-                String ufEntrega = rsEndereco.getString("uf");
-                String bairroEntrega = rsEndereco.getString("bairro");
+                String cidadeEntrega = rsEnderecosEntrega.getString("cidade");
+                String ufEntrega = rsEnderecosEntrega.getString("uf");
+                String bairroEntrega = rsEnderecosEntrega.getString("bairro");
 
                 enderecosEntrega.add(new Endereco(idEnderecoEntrega, cepEntrega, enderecoEntrega, numeroEntrega, complementoEntrega, cidadeEntrega, ufEntrega, bairroEntrega));
             }
 
             cliente = new Cliente(enderecoFaturamento, enderecosEntrega, idCliente, nome, cpf, email, senha, cargo, ativo);
             stmtCliente.close();
-            stmtEndereco.close();
             stmtEnderecosEntrega.close();
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(Usuario.class.getName()).log(Level.SEVERE, null, ex);
