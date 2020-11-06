@@ -31,6 +31,10 @@ public class Produto {
     public Produto() {
     }
 
+    public Produto(int id) {
+        this.id = id;
+    }
+
     public Produto(String nome, String marca, String categoria, double valor, String descricao, String palavrasChave, int p, int m, int g, int unico, ArrayList<Imagem> imagens, ArrayList<Pergunta> perguntas, boolean ativo) {
         this.nome = nome;
         this.marca = marca;
