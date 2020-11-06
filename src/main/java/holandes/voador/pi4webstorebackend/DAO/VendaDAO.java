@@ -5,6 +5,8 @@
  */
 package holandes.voador.pi4webstorebackend.DAO;
 
+import holandes.voador.pi4webstorebackend.Model.Endereco;
+import holandes.voador.pi4webstorebackend.Model.Produto;
 import holandes.voador.pi4webstorebackend.Model.ProdutoVenda;
 import holandes.voador.pi4webstorebackend.Model.Venda;
 import holandes.voador.pi4webstorebackend.utils.GerenciadorConexao;
@@ -14,6 +16,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -22,7 +26,73 @@ import java.util.ArrayList;
 public class VendaDAO {
 
     public static ArrayList<Venda> getVendasByClient(int clientId) {
-        return new ArrayList<Venda>();
+        Connection conexao;
+        PreparedStatement stmt;
+        ArrayList<Venda> vendas = new ArrayList<>();
+
+        try {
+            conexao = GerenciadorConexao.abrirConexao();
+            stmt = conexao.prepareStatement("SELECT * FROM vendas WHERE id_cliente = ?;");
+            stmt.setInt(1, clientId);
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Venda venda = new Venda();
+                int idVenda = rs.getInt("id");
+
+                venda.setId(idVenda);
+                venda.setData(rs.getString("data_venda"));
+                venda.setEnderecoEntrega(EnderecoDAO.getEnderecoFromDB(conexao, rs.getInt("id_endereco")));
+                venda.setPagamento(rs.getString("pagamento"));
+                venda.setDesconto(rs.getInt("desconto"));
+                venda.setTotal(rs.getDouble("total"));
+                venda.setStatus(rs.getString("status"));
+
+                venda.setProdutos(getProdutosBySaleId(conexao, idVenda));
+
+                vendas.add(venda);
+            }
+            stmt.close();
+
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(Venda.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            GerenciadorConexao.fecharConexao();
+        }
+        return vendas;
+    }
+
+    private static ArrayList<ProdutoVenda> getProdutosBySaleId(Connection conexao, int idVenda) throws SQLException {
+        ArrayList<ProdutoVenda> produtos = new ArrayList<>();
+        PreparedStatement statement;
+
+        statement = conexao.prepareStatement(
+                "SELECT id_produto, nome, marca, categoria, valor ,tamanho, quantidade FROM venda_produto "
+                + "INNER JOIN produtos ON id_produto = produtos.id "
+                + "WHERE id_venda = ?;");
+        statement.setInt(1, idVenda);
+        ResultSet rs = statement.executeQuery();
+
+        while (rs.next()) {
+            Produto produto = new Produto();
+            ProdutoVenda produtoVenda = new ProdutoVenda();
+            int idProduto = rs.getInt("id_produto");
+
+            produto.setId(idProduto);
+            produto.setNome(rs.getString("nome"));
+            produto.setMarca(rs.getString("marca"));
+            produto.setCategoria(rs.getString("categoria"));
+            produto.setValor(rs.getDouble("valor"));
+            produto.setImagens(ImagemDAO.getImagensByProductId(conexao, idProduto));
+
+            produtoVenda.setProduto(produto);
+            produtoVenda.setTamanho(rs.getString("tamanho"));
+            produtoVenda.setQuantidade(rs.getInt("quantidade"));
+
+            produtos.add(produtoVenda);
+        }
+        statement.close();
+        return produtos;
     }
 
     public static Venda addVenda(Venda venda) {

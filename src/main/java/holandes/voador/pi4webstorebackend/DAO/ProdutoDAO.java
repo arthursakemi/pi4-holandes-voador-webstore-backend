@@ -124,7 +124,6 @@ public class ProdutoDAO {
         Connection conexao = null;
         PreparedStatement produtoStatement = null;
         PreparedStatement perguntasStatement = null;
-        PreparedStatement imagensStatement = null;
         Produto produto = null;
 
         try {
@@ -162,18 +161,8 @@ public class ProdutoDAO {
                 perguntas.add(new Pergunta(idPergunta, idProduto, pergunta, resposta));
             }
 
-            imagensStatement = conexao.prepareStatement("SELECT * FROM imagens WHERE id_produto = ?;");
-            imagensStatement.setInt(1, idProduto);
+            ArrayList<Imagem> imagens = ImagemDAO.getImagensByProductId(conexao, idProduto);
 
-            rs = imagensStatement.executeQuery();
-
-            ArrayList<Imagem> imagens = new ArrayList<>();
-
-            while (rs.next()) {
-                int idImagem = rs.getInt("id");
-                String imagem = rs.getString("imagem");
-                imagens.add(new Imagem(idImagem, idProduto, imagem));
-            }
             produto = new Produto(idProduto, nome, marca, categoria, valor, descricao, palavrasChave, p, m, g, unico, imagens, perguntas, ativo);
 
         } catch (SQLException | ClassNotFoundException ex) {
@@ -185,10 +174,6 @@ public class ProdutoDAO {
                 }
                 if (perguntasStatement != null) {
                     perguntasStatement.close();
-                }
-                if (imagensStatement != null) {
-
-                    imagensStatement.close();
                 }
                 GerenciadorConexao.fecharConexao();
             } catch (SQLException ex) {
@@ -239,18 +224,8 @@ public class ProdutoDAO {
                     perguntas.add(new Pergunta(idPergunta, idProduto, pergunta, resposta));
                 }
 
-                imagensStatement = conexao.prepareStatement("SELECT * FROM imagens WHERE id_produto = ?;");
-                imagensStatement.setInt(1, idProduto);
+                ArrayList<Imagem> imagens = ImagemDAO.getImagensByProductId(conexao, idProduto);
 
-                ResultSet rsImagens = imagensStatement.executeQuery();
-
-                ArrayList<Imagem> imagens = new ArrayList<>();
-
-                while (rsImagens.next()) {
-                    int idImagem = rsImagens.getInt("id");
-                    String imagem = rsImagens.getString("imagem");
-                    imagens.add(new Imagem(idImagem, idProduto, imagem));
-                }
                 produtos.add(new Produto(idProduto, nome, marca, categoria, valor, descricao, palavrasChave, p, m, g, unico, imagens, perguntas, ativo));
             }
 

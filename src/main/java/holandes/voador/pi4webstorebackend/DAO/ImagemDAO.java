@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 /**
  *
@@ -65,5 +66,22 @@ public class ImagemDAO {
         }
 
         return newImagem;
+    }
+
+    public static ArrayList<Imagem> getImagensByProductId(Connection conexao, int idProduto) throws SQLException {
+        ResultSet rs;
+        ArrayList<Imagem> imagens = new ArrayList<>();
+
+        PreparedStatement imagensStatement = conexao.prepareStatement("SELECT * FROM imagens WHERE id_produto = ?;");
+        imagensStatement.setInt(1, idProduto);
+
+        rs = imagensStatement.executeQuery();
+
+        while (rs.next()) {
+            int idImagem = rs.getInt("id");
+            String imagem = rs.getString("imagem");
+            imagens.add(new Imagem(idImagem, idProduto, imagem));
+        }
+        return imagens;
     }
 }
