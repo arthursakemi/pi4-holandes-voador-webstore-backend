@@ -5,7 +5,6 @@
  */
 package holandes.voador.pi4webstorebackend.Model;
 
-import java.sql.Date;
 import java.util.ArrayList;
 
 /**
@@ -20,6 +19,7 @@ public class Venda {
     private Endereco enderecoEntrega;
     private String pagamento;
     private int desconto;
+    private double frete;
     private double total;
     private String status;
     private ArrayList<ProdutoVenda> produtos;
@@ -27,24 +27,26 @@ public class Venda {
     public Venda() {
     }
 
-    public Venda(Cliente cliente, String data, Endereco enderecoEntrega, String pagamento, int desconto, double total, String status, ArrayList<ProdutoVenda> produtos) {
+    public Venda(Cliente cliente, String data, Endereco enderecoEntrega, String pagamento, int desconto, double frete, double total, String status, ArrayList<ProdutoVenda> produtos) {
         this.cliente = cliente;
         this.data = data;
         this.enderecoEntrega = enderecoEntrega;
         this.pagamento = pagamento;
         this.desconto = desconto;
+        this.frete = frete;
         this.total = total;
         this.status = status;
         this.produtos = produtos;
     }
 
-    public Venda(int id, Cliente cliente, String data, Endereco enderecoEntrega, String pagamento, int desconto, double total, String status, ArrayList<ProdutoVenda> produtos) {
+    public Venda(int id, Cliente cliente, String data, Endereco enderecoEntrega, String pagamento, int desconto, double frete, double total, String status, ArrayList<ProdutoVenda> produtos) {
         this.id = id;
         this.cliente = cliente;
         this.data = data;
         this.enderecoEntrega = enderecoEntrega;
         this.pagamento = pagamento;
         this.desconto = desconto;
+        this.frete = frete;
         this.total = total;
         this.status = status;
         this.produtos = produtos;
@@ -96,6 +98,14 @@ public class Venda {
 
     public void setDesconto(int desconto) {
         this.desconto = desconto;
+    }
+
+    public double getFrete() {
+        return frete;
+    }
+
+    public void setFrete(double frete) {
+        this.frete = frete;
     }
 
     public double getTotal() {

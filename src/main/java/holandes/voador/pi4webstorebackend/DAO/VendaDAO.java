@@ -5,7 +5,6 @@
  */
 package holandes.voador.pi4webstorebackend.DAO;
 
-import holandes.voador.pi4webstorebackend.Model.Endereco;
 import holandes.voador.pi4webstorebackend.Model.Produto;
 import holandes.voador.pi4webstorebackend.Model.ProdutoVenda;
 import holandes.voador.pi4webstorebackend.Model.Venda;
@@ -45,6 +44,7 @@ public class VendaDAO {
                 venda.setEnderecoEntrega(EnderecoDAO.getEnderecoFromDB(conexao, rs.getInt("id_endereco")));
                 venda.setPagamento(rs.getString("pagamento"));
                 venda.setDesconto(rs.getInt("desconto"));
+                venda.setFrete(rs.getDouble("frete"));
                 venda.setTotal(rs.getDouble("total"));
                 venda.setStatus(rs.getString("status"));
 
@@ -121,8 +121,8 @@ public class VendaDAO {
 
         statement = conexao.prepareStatement(
                 "INSERT INTO vendas "
-                + "(id_cliente, id_endereco, data_venda, pagamento, desconto, total, status) "
-                + "VALUES(?, ?, ?, ?, ?, ?, ?);",
+                + "(id_cliente, id_endereco, data_venda, pagamento, desconto, frete, total, status) "
+                + "VALUES(?, ?, ?, ?, ?, ?, ?, ?);",
                 Statement.RETURN_GENERATED_KEYS);
 
         statement.setInt(1, venda.getCliente().getId());
@@ -130,8 +130,9 @@ public class VendaDAO {
         statement.setString(3, venda.getData());
         statement.setString(4, venda.getPagamento());
         statement.setInt(5, venda.getDesconto());
-        statement.setDouble(6, venda.getTotal());
-        statement.setString(7, venda.getStatus());
+        statement.setDouble(6, venda.getFrete());
+        statement.setDouble(7, venda.getTotal());
+        statement.setString(8, venda.getStatus());
         statement.executeUpdate();
 
         rs = statement.getGeneratedKeys();

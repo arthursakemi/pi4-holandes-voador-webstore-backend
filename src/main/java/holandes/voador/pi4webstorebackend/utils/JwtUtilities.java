@@ -5,13 +5,10 @@
  */
 package holandes.voador.pi4webstorebackend.utils;
 
-import holandes.voador.pi4webstorebackend.Model.Cliente;
 import holandes.voador.pi4webstorebackend.Model.Usuario;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 import java.security.Key;
 import java.util.Date;
 import javax.crypto.spec.SecretKeySpec;
