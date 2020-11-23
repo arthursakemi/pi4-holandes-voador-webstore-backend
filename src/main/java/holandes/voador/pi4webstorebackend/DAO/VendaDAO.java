@@ -24,6 +24,44 @@ import java.util.logging.Logger;
  */
 public class VendaDAO {
 
+    public static ArrayList<Venda> getAllVendas() {
+        Connection conexao;
+        PreparedStatement stmt;
+        ArrayList<Venda> vendas = new ArrayList<>();
+
+        try {
+            conexao = GerenciadorConexao.abrirConexao();
+            stmt = conexao.prepareStatement("SELECT * FROM vendas ORDER BY data_venda DESC;");
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Venda venda = new Venda();
+                int idVenda = rs.getInt("id");
+
+                venda.setId(idVenda);
+                venda.setData(rs.getString("data_venda"));
+                venda.setEnderecoEntrega(EnderecoDAO.getEnderecoFromDB(conexao, rs.getInt("id_endereco")));
+                venda.setPagamento(rs.getString("pagamento"));
+                venda.setDesconto(rs.getInt("desconto"));
+                venda.setFrete(rs.getDouble("frete"));
+                venda.setTotal(rs.getDouble("total"));
+                venda.setStatus(rs.getString("status"));
+
+                venda.setCliente(ClienteDAO.getBasicClientInfo(conexao, rs.getInt("id_cliente")));
+                venda.setProdutos(getProdutosBySaleId(conexao, idVenda));
+
+                vendas.add(venda);
+            }
+            stmt.close();
+
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(Venda.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            GerenciadorConexao.fecharConexao();
+        }
+        return vendas;
+    }
+
     public static ArrayList<Venda> getVendasByClient(int clientId) {
         Connection conexao;
         PreparedStatement stmt;
@@ -31,7 +69,7 @@ public class VendaDAO {
 
         try {
             conexao = GerenciadorConexao.abrirConexao();
-            stmt = conexao.prepareStatement("SELECT * FROM vendas WHERE id_cliente = ?;");
+            stmt = conexao.prepareStatement("SELECT * FROM vendas WHERE id_cliente = ? ORDER BY data_venda DESC;");
             stmt.setInt(1, clientId);
 
             ResultSet rs = stmt.executeQuery();
@@ -179,5 +217,27 @@ public class VendaDAO {
         statement.executeUpdate();
 
         statement.close();
+    }
+
+    public static boolean atualizarStatusVenda(int idVenda, String status) {
+        Connection conexao;
+        PreparedStatement statement;
+
+        try {
+            conexao = GerenciadorConexao.abrirConexao();
+            statement = conexao.prepareStatement("UPDATE vendas SET status = ? WHERE id = ?;");
+            statement.setString(1, status);
+            statement.setInt(2, idVenda);
+            statement.executeUpdate();
+            statement.close();
+
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(Venda.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        } finally {
+            GerenciadorConexao.fecharConexao();
+        }
+
+        return true;
     }
 }

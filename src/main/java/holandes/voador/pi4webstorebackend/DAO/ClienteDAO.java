@@ -292,4 +292,21 @@ public class ClienteDAO {
         }
         return success;
     }
+
+    public static Cliente getBasicClientInfo(Connection conexao, int clientId) throws SQLException {
+        Cliente cliente = new Cliente();
+        PreparedStatement statement;
+        ResultSet rs;
+
+        statement = conexao.prepareStatement("SELECT nome, cpf FROM clientes WHERE id = ?;");
+        statement.setInt(1, clientId);
+        rs = statement.executeQuery();
+        rs.next();
+
+        cliente.setId(clientId);
+        cliente.setNome(rs.getString("nome"));
+        cliente.setCpf(rs.getString("cpf"));
+
+        return cliente;
+    }
 }

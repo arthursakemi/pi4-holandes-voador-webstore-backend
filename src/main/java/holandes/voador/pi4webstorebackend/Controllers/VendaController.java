@@ -10,6 +10,7 @@ import holandes.voador.pi4webstorebackend.Model.Venda;
 import java.util.ArrayList;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,8 +29,18 @@ public class VendaController {
         return VendaDAO.getVendasByClient(clientId);
     }
 
+    @GetMapping("/venda")
+    public static ArrayList<Venda> getVendas() {
+        return VendaDAO.getAllVendas();
+    }
+
     @PostMapping("/venda")
     public static Venda cadastroVenda(@RequestBody Venda venda) {
         return VendaDAO.addVenda(venda);
+    }
+
+    @PatchMapping("/venda/{idVenda}")
+    public static boolean updateStatusVenda(@PathVariable int idVenda, @RequestBody Venda venda) {
+        return VendaDAO.atualizarStatusVenda(idVenda, venda.getStatus());
     }
 }
